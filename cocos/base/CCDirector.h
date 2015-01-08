@@ -263,7 +263,7 @@ public:
      If level is 1, it will pop all scenes until it reaches to root scene.
      If level is <= than the current stack level, it won't do anything.
      */
- 	void popToSceneStackLevel(int level);
+    void popToSceneStackLevel(int level);
 
     /** Replaces the running scene with a new one. The running scene is terminated.
      * ONLY call it if there is a running scene.
@@ -275,11 +275,7 @@ public:
      * @lua endToLua
      */
     void end();
-    
-    /** Restart the director
-     */
-    void restart();
-    
+
     /** Pauses the running scene.
      The running scene will be _drawed_ but all scheduled timers will be paused
      While paused, the draw rate will be 4 FPS to reduce CPU consumption
@@ -291,6 +287,10 @@ public:
      The "delta time" will be 0 (as if the game wasn't paused)
      */
     void resume();
+    
+    /** Restart the director
+     */
+    void restart();
 
     /** Stops the animation. Nothing will be drawn. The main loop won't be triggered anymore.
      If you don't want to pause your animation call [pause] instead.
@@ -316,7 +316,7 @@ public:
      */
     void purgeCachedData();
 
-	/** sets the default values based on the Configuration info */
+    /** sets the default values based on the Configuration info */
     void setDefaultValues();
 
     // OpenGL Helper
@@ -326,6 +326,9 @@ public:
 
     /** enables/disables OpenGL alpha blending */
     void setAlphaBlending(bool on);
+    
+    /** set clear values for the color buffers, value range of each element is [0.0, 1.0] */
+    void setClearColor(const Color4F& clearColor);
 
     /** enables/disables OpenGL depth test */
     void setDepthTest(bool on);
@@ -381,7 +384,7 @@ public:
     Console* getConsole() const { return _console; }
 
     /* Gets delta time since last tick to main loop */
-	float getDeltaTime() const;
+    float getDeltaTime() const;
     
     /**
      *  get Frame Rate
@@ -397,6 +400,8 @@ public:
     void resetMatrixStack();
 
 protected:
+    void reset();
+    
     void purgeDirector();
     bool _purgeDirectorInNextLoop; // this flag will be set to true in end()
     
@@ -440,7 +445,7 @@ protected:
     EventCustom *_eventProjectionChanged, *_eventAfterDraw, *_eventAfterVisit, *_eventAfterUpdate;
         
     /* delta time since last tick to main loop */
-	float _deltaTime;
+    float _deltaTime;
     
     /* The _openGLView, where everything is rendered, GLView is a abstract class,cocos2d-x provide GLViewImpl
      which inherit from it as default renderer context,you can have your own by inherit from it*/
@@ -469,6 +474,9 @@ protected:
     /* How many frames were called since the director started */
     unsigned int _totalFrames;
     float _secondsPerFrame;
+    
+    /* clear color set outside be used in setGLDefaultValues() */
+    Color4F _clearColor;
     
     /* The running scene */
     Scene *_runningScene;
